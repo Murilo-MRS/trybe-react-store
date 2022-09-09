@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Home from "./pages/Home";
-import "./App.css";
-import Carrinho from "./pages/Carrinho";
-import Categoria from "./pages/Categoria";
-import { getCategories } from "./services/api";
+import React, { Component } from 'react';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import Home from './pages/Home';
+import './App.css';
+import Carrinho from './pages/Carrinho';
+import Categoria from './pages/Categoria';
+import { getCategories } from './services/api';
 
 class App extends Component {
   state = {
