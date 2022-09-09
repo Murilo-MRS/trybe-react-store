@@ -1,23 +1,39 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { getProductsFromCategoryAndQuery } from '../services/api';
+import ProductList from '../components/ProductList';
+import {
+  getCategories,
+  getProductsFromCategoryAndQuery,
+} from '../services/api';
+import Categoria from './Categoria';
 
 class Home extends Component {
   state = {
     productSearch: '',
-    searchFail: false,
     productsList: [],
+    categoryList: [],
+    // selectedCategory: '',
+    searchFail: false,
+    inputCategoryList: [],
   };
 
-  handleClick = async (product) => {
-    const responseSearch = await getProductsFromCategoryAndQuery(product);
+  componentDidMount() {
+    this.handleCategory();
+  }
+
+  handleClick = async (product, category) => {
+    const responseSearch = await getProductsFromCategoryAndQuery(
+      product,
+      category,
+    );
     const { results } = responseSearch;
-    // console.log(results);
-    // console.log(responseSearch.error);
-    console.log(product);
-    // console.log(results.some((element) => element.title.includes(product)));
-    // this.setState({ searchFail: true });
-    if (results.length === 0) this.setState({ searchFail: true });
+
+    if (results.length === 0) {
+      this.setState({ searchFail: true });
+    }
+    if (results.length > 0) {
+      this.setState({ searchFail: false });
+    }
     this.setState({ productsList: results });
   };
 
@@ -26,8 +42,31 @@ class Home extends Component {
     this.setState({ productSearch: value });
   };
 
+  handleInputRadio = async ({ target: { value } }) => {
+    // const { value } = target;
+    const responseSelectedCategory = await getProductsFromCategoryAndQuery('', value);
+    const { results } = responseSelectedCategory;
+    console.log(results);
+    this.setState({
+      // selectedCategory: value,
+      inputCategoryList: results,
+    });
+  };
+
+  handleCategory = async () => {
+    const response = await getCategories();
+    this.setState({ categoryList: response });
+  };
+
   render() {
-    const { productSearch, searchFail, productsList } = this.state;
+    const {
+      productSearch,
+      searchFail,
+      productsList,
+      // selectedCategory,
+      categoryList,
+      inputCategoryList,
+    } = this.state;
     return (
       <div>
         <input data-testid="query-input" onChange={ this.handleInput } />
@@ -44,23 +83,21 @@ class Home extends Component {
         <h2 data-testid="home-initial-message">
           Digite algum termo de pesquisa ou escolha uma categoria.
         </h2>
+        {categoryList.map((e) => (
+          <Categoria
+            key={ e.id }
+            nome={ e.name }
+            id={ e.id }
+            handleInputRadio={ this.handleInputRadio }
+          />
+        ))}
         <div>
-          {searchFail ? (
-            <h2>Nenhum produto foi encontrado</h2>
-          ) : (
-            productsList.map((e) => (
-              <div data-testid="product" key={ e.id }>
-                <img src={ e.thumbnail } alt={ e.title } />
-                <p>{e.title}</p>
-                <p>
-                  {e.price.toLocaleString('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL',
-                  })}
-                </p>
-              </div>
-            ))
-          )}
+          {(!searchFail)
+            ? <ProductList searchFail={ searchFail } productsList={ productsList } />
+            : (<h2>Nenhum produto foi encontrado</h2>)}
+          <ProductList
+            productsList={ inputCategoryList }
+          />
         </div>
       </div>
     );
