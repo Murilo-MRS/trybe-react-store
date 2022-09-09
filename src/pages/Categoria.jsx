@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Categoria extends Component {
   render() {
+    const { nome } = this.props;
     return (
       <div>
-        <label htmlFor="categoria1" data-testid="category">
-          Acessórios para Veículos
-          <input type="radio" value="acessorio_veiculo" name="categoria" />
-        </label>
-        <label htmlFor="categoria2" data-testid="category">
-          Agro
-          <input type="radio" value="agro" name="categoria" />
-        </label>
-        <label htmlFor="categoria3" data-testid="category">
-          Alimentos e Bebidas
-          <input type="radio" value="alimentos_bebidas" name="categoria" />
+        <label htmlFor={ nome } data-testid="category">
+          { nome }
+          <input id={ nome } type="radio" value={ nome } name="categoryList" />
         </label>
       </div>
     );
   }
 }
 export default Categoria;
+Categoria.propTypes = { nome: PropTypes.string.isRequired };
