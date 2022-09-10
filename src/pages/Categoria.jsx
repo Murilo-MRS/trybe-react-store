@@ -3,16 +3,28 @@ import PropTypes from 'prop-types';
 
 class Categoria extends Component {
   render() {
-    const { nome } = this.props;
+    const { nome, id, handleInputRadio } = this.props;
     return (
       <div>
-        <label htmlFor={ nome } data-testid="category">
+        <label htmlFor={ nome }>
           { nome }
-          <input id={ nome } type="radio" value={ nome } name="categoryList" />
+          <input
+            data-testid="category"
+            id={ nome }
+            type="radio"
+            value={ id }
+            name="categoryList"
+            onChange={ handleInputRadio }
+          />
         </label>
       </div>
     );
   }
 }
+
+Categoria.propTypes = {
+  handleInputRadio: PropTypes.func,
+  id: PropTypes.string,
+  nome: PropTypes.string,
+}.isRequired;
 export default Categoria;
-Categoria.propTypes = { nome: PropTypes.string.isRequired };
