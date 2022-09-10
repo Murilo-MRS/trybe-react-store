@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 export default class ProductList extends Component {
   render() {
@@ -13,7 +14,12 @@ export default class ProductList extends Component {
         { productsList.map((e) => (
           <div data-testid="product" key={ e.id }>
             <img src={ e.thumbnail } alt={ e.title } />
-            <p>{e.title}</p>
+            <Link
+              data-testid="product-detail-link"
+              to={ `/detalhes/${e.id}` }
+            >
+              <p>{e.title}</p>
+            </Link>
             <p>
               {e.price.toLocaleString('pt-BR', {
                 style: 'currency',
