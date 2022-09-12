@@ -17,3 +17,26 @@ export async function getProductById(PRODUCT_ID) {
   const resposta = await data.json();
   return resposta;
 }
+// CREDITOS: funcao services da trybe do trybetunes para salvar no localstorage
+const localReviews = 'commentsReviews';
+if (!JSON.parse(localStorage.getItem(localReviews))) {
+  localStorage.setItem(localReviews, JSON.stringify([]));
+}
+
+const readReviews = () => JSON.parse(localStorage.getItem(localReviews));
+
+const saveReviews = (reviews) => localStorage
+  .setItem(localReviews, JSON.stringify(reviews));
+
+export const getReviews = () => {
+  const reviewsSent = readFavoriteSongs();
+  return reviewsSent;
+};
+
+// const saveReview = (review) => localStorage.setItem(localReviews, JSON.stringify(review));
+export function addReview(review) {
+  if (review) {
+    const reviewsSent = readReviews();
+    return saveReviews([...reviewsSent, review]);
+  }
+}

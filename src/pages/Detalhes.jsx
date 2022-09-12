@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { getProductById } from '../services/api';
+import { addReview, getProductById } from '../services/api';
 import FormAvaliativo from '../components/FormAvaliativo';
 import ReviewCard from '../components/ReviewCard';
 
@@ -45,19 +45,19 @@ export default class Detalhes extends Component {
     console.log(value);
     this.setState({
       [name]: value,
-      // email,
-      // text,
-      // rating,
+    }, () => {
+      this.setState({ invalidField: false });
     });
   };
 
   handleButtonReview = () => {
-    const { email, text, rating, reviews } = this.state;
+    const { email, text, rating, reviews, productId } = this.state;
 
     const reviewObject = {
       email,
       text,
       rating,
+      id: productId.id,
     };
     const arrReviews = [...reviews, reviewObject];
     this.setState(
@@ -67,8 +67,10 @@ export default class Detalhes extends Component {
         rating: '',
       },
       () => {
-        // const
-        if (email.length > 0 && text.length > 0 && rating) {
+        const testValidation = /\S+@\S+\.\S+/;
+        const emailValidation = testValidation.test(email) && email.length > 0;
+        if (emailValidation && text.length > 0 && rating) {
+          addReview(reviewObject);
           this.setState({
             reviews: arrReviews,
             email: '',
