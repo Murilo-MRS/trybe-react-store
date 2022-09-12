@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { addReview, getProductById } from '../services/api';
+import { addReview, getProductById, getReviews } from '../services/api';
 import FormAvaliativo from '../components/FormAvaliativo';
 import ReviewCard from '../components/ReviewCard';
 
@@ -19,7 +19,15 @@ export default class Detalhes extends Component {
 
   componentDidMount() {
     this.handleDetailsMatch();
+    this.reviewList();
   }
+
+  reviewList = () => {
+    const reviewsFromStorage = getReviews();
+    this.setState({ reviews: reviewsFromStorage }, async () => {
+      if (reviewsFromStorage.length > 0) this.setState({ reviews: reviewsFromStorage });
+    });
+  };
 
   handleDetailsMatch = async () => {
     const {
@@ -134,7 +142,7 @@ export default class Detalhes extends Component {
         />
         {invalidField && <p data-testid="error-msg">Campos inválidos</p>}
         <div className="reviews-container">
-          <ReviewCard reviews={ reviews } />
+          <ReviewCard reviews={ reviews } productId={ productId } />
         </div>
       </div>
     );

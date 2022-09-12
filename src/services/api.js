@@ -29,7 +29,7 @@ const saveReviews = (reviews) => localStorage
   .setItem(localReviews, JSON.stringify(reviews));
 
 export const getReviews = () => {
-  const reviewsSent = readFavoriteSongs();
+  const reviewsSent = readReviews();
   return reviewsSent;
 };
 

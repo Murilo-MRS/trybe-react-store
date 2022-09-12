@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 
 export default class ReviewCard extends Component {
   render() {
-    const { reviews } = this.props;
+    const { reviews, productId } = this.props;
     return (
       <div>
-        {reviews.map((e) => (
+        {reviews.filter((e) => (
+          e.id === productId.id
+        )).map((e) => (
           <div className="review-card" key={ e.email }>
             <span data-testid="review-card-email">{e.email}</span>
             {' - Nota: '}
