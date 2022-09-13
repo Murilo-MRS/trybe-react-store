@@ -18,14 +18,28 @@ export default class Detalhes extends Component {
   };
 
   componentDidMount() {
+    const {
+      match: {
+        params: { id },
+      },
+    } = this.props;
+    const localReviews = id;
+    if (!JSON.parse(localStorage.getItem(localReviews))) {
+      localStorage.setItem(localReviews, JSON.stringify([]));
+    }
     this.handleDetailsMatch();
     this.reviewList();
   }
 
   reviewList = () => {
-    const reviewsFromStorage = getReviews();
-    this.setState({ reviews: reviewsFromStorage }, async () => {
-      if (reviewsFromStorage.length > 0) this.setState({ reviews: reviewsFromStorage });
+    const {
+      match: {
+        params: { id },
+      },
+    } = this.props;
+    const reviewsFromStorage = getReviews(id);
+    this.setState({ reviews: reviewsFromStorage }, () => {
+      if (reviewsFromStorage?.length > 0) this.setState({ reviews: reviewsFromStorage });
     });
   };
 
@@ -35,7 +49,6 @@ export default class Detalhes extends Component {
         params: { id },
       },
     } = this.props;
-    console.log(id);
     const responseProductId = await getProductById(id);
     this.setState({
       productId: responseProductId,
@@ -50,7 +63,6 @@ export default class Detalhes extends Component {
   handleInputReview = ({ target }) => {
     // const { value } = target;
     const { name, value } = target;
-    console.log(value);
     this.setState({
       [name]: value,
     }, () => {
@@ -67,18 +79,20 @@ export default class Detalhes extends Component {
       rating,
       id: productId.id,
     };
+
+    const {
+      match: {
+        params: { id },
+      },
+    } = this.props;
     const arrReviews = [...reviews, reviewObject];
     this.setState(
-      {
-        email: '',
-        text: '',
-        rating: '',
-      },
+      {},
       () => {
         const testValidation = /\S+@\S+\.\S+/;
         const emailValidation = testValidation.test(email) && email.length > 0;
-        if (emailValidation && text.length > 0 && rating) {
-          addReview(reviewObject);
+        if (emailValidation && rating) {
+          addReview(arrReviews, id);
           this.setState({
             reviews: arrReviews,
             email: '',

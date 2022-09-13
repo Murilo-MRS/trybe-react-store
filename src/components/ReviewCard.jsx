@@ -6,10 +6,10 @@ export default class ReviewCard extends Component {
     const { reviews, productId } = this.props;
     return (
       <div>
-        {reviews.filter((e) => (
+        {reviews?.filter((e) => (
           e.id === productId.id
         )).map((e) => (
-          <div className="review-card" key={ e.email }>
+          <div className="review-card" key={ e.text }>
             <span data-testid="review-card-email">{e.email}</span>
             {' - Nota: '}
             <span data-testid="review-card-rating">{e.rating}</span>
