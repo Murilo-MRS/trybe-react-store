@@ -29,10 +29,34 @@ export const getReviews = (id) => {
   return reviewsSent;
 };
 
-// const saveReview = (review) => localStorage.setItem(localReviews, JSON.stringify(review));
 export function addReview(review, id) {
   if (review) {
     const reviewsSent = readReviews(id);
     return saveReviews([...reviewsSent, review], id);
   }
 }
+
+// salva no local storage o shopping cart list
+const localCartList = 'localCartList';
+if (!JSON.parse(localStorage.getItem(localCartList))) {
+  localStorage.setItem(localCartList, JSON.stringify([]));
+}
+
+const readCartList = () => JSON.parse(localStorage.getItem(localCartList));
+
+const saveCartList = (cartList) => localStorage
+  .setItem(localCartList, JSON.stringify(cartList));
+
+export const getCartList = () => {
+  const cartListSent = readCartList();
+  return cartListSent;
+};
+
+export function addCartList(cartList) {
+  if (cartList) {
+    const cartListSent = readCartList();
+    return saveCartList([...cartListSent, cartList]);
+  }
+}
+
+// const saveReview = (review) => localStorage.setItem(localReviews, JSON.stringify(review));

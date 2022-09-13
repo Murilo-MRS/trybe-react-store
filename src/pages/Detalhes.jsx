@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
-import { addReview, getProductById, getReviews } from '../services/api';
+import { addReview, getProductById, getReviews, addCartList } from '../services/api';
 import FormAvaliativo from '../components/FormAvaliativo';
 import ReviewCard from '../components/ReviewCard';
 
@@ -15,6 +15,7 @@ export default class Detalhes extends Component {
     rating: '',
     invalidField: false,
     reviews: [],
+    shoppingCardList: [],
   };
 
   componentDidMount() {
@@ -57,6 +58,20 @@ export default class Detalhes extends Component {
   };
 
   handleButtonAddToCart = () => {
+    const { productId, shoppingCardList } = this.state;
+    console.log(productId);
+    // productId.qtd = 1;
+    const arrCartList = [...shoppingCardList, productId];
+    this.setState({}, () => {
+      productId.qtd = 1;
+
+      addCartList(productId);
+      this.setState({ shoppingCardList: arrCartList });
+      console.log(shoppingCardList);
+    });
+  };
+
+  handleRedirect = () => {
     this.setState({ addToCart: true });
   };
 
@@ -122,7 +137,7 @@ export default class Detalhes extends Component {
       <div>
         <div>
           <span data-testid="product-detail-name">{title}</span>
-          {' - '}
+          { ' - ' }
           <span data-testid="product-detail-price">
             {productPrice}
             {/* .toLocaleString('pt-BR', {
@@ -137,8 +152,17 @@ export default class Detalhes extends Component {
               alt={ title }
             />
           </div>
+          <div>
+            <button
+              type="button"
+              data-testid="shopping-cart-button"
+              onClick={ this.handleRedirect }
+            >
+              Vá ao Carrinho
+            </button>
+          </div>
           <button
-            data-testid="shopping-cart-button"
+            data-testid="product-detail-add-to-cart"
             type="button"
             onClick={ this.handleButtonAddToCart }
           >
